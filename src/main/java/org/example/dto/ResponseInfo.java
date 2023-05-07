@@ -1,6 +1,6 @@
 package org.example.dto;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class ResponseInfo {
     private Object value;
@@ -26,13 +26,6 @@ public class ResponseInfo {
         value = _value;
         message = _message.isBlank() ? "No Message" : _message;
         errors = new ArrayList<>();
-        success = _success;
-    }
-
-    public ResponseInfo(Object _value, boolean _success, String _message, ArrayList<String> _errors) {
-        value = _value;
-        message = _message.isBlank() ? "No Message" : _message;
-        errors = _errors;
         success = _success;
     }
 
