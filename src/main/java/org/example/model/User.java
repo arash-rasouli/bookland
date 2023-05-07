@@ -1,14 +1,16 @@
 package org.example.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import jakarta.persistence.Table;
 import org.example.utils.Util;
 
 @Entity
+@Table(name = "USER_")
 public class User {
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     private String email;
     private String password;
@@ -16,5 +18,12 @@ public class User {
     public boolean verifyPassword(String password){
         String passHash =  Util.hexToString(Util.getSHA(password));
         return this.password.equals(passHash);
+    }
+
+    public String getEmail() {
+        return email;
+    }
+    public String getPassword() {
+        return password;
     }
 }
