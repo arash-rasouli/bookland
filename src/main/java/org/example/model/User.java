@@ -18,8 +18,9 @@ public class User {
     private int id;
 
     @NotBlank(message = "userEmail can not be blank")
-    @Email(message = "Wrong email format")
+    @Email(message = "Wrong userEmail format")
     private String email;
+    @NotBlank(message = "Password can not be blank")
     @Size(min = 4, message = "Password should contain at least 4 character")
     private String password;
 
@@ -30,9 +31,36 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "book_id"))
     List<Book> library;
 
+    public User() {
+    }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public void addBookToLibrary(Book book){
+        library.add(book);
+    }
+
+    public Book getBookFromLibrary(int bookId){
+        for(Book book : library){
+            if (book.getId() == bookId) return book;
+        }
+        return null;
+    }
+
+    public void deleteBookFromLibrary(int bookId){
+        library.removeIf(book -> book.getId() == bookId);
+    }
+
     public boolean verifyPassword(String password){
         String passHash =  Util.hexToString(Util.getSHA(password));
         return this.password.equals(passHash);
+    }
+
+    public List<Book> getLibrary() {
+        return library;
     }
 
     public String getEmail() {
