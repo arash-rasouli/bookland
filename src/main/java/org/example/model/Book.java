@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
+//import java.time.LocalDate;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,12 +20,22 @@ public class Book {
     private String name;
     @NotBlank(message = "authorName can't be blank")
     private String authorName;
-    @NotNull(message = "publishedDate can't be null")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate publishedDate;
+    @NotBlank(message = "publishedDate can't be null")
+    @Pattern(regexp = "^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$", message = "Invalid Date Format(format = yyyy-mm-dd)")
+    private String publishedDate;
 
     @ManyToMany(mappedBy = "library")
     List<User> users;
+
+    public void update(Book _book){
+        name = _book.getName();
+        authorName = _book.getAuthorName();
+//        publishedDate = _book.getPublishedDate();
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -39,10 +51,10 @@ public class Book {
         this.authorName = authorName;
     }
 
-    public LocalDate getPublishedDate() {
+    public String getPublishedDate() {
         return publishedDate;
     }
-    public void setPublishedDate(LocalDate publishedDate) {
+    public void setPublishedDate(String publishedDate) {
         this.publishedDate = publishedDate;
     }
 }
