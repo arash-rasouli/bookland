@@ -1,7 +1,7 @@
 package org.example.utils;
 
 import io.jsonwebtoken.*;
-
+import org.apache.commons.configuration.PropertiesConfiguration;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +29,12 @@ public class Util {
             hexString.insert(0, '0');
         }
         return hexString.toString();
+    }
+
+    public static String getJWTKey() throws Exception{
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.load("secrets.properties");
+        return config.getString("bookland.jwt.key");
     }
 
     public static String createJWT(String userEmail, String key){
