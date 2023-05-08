@@ -1,6 +1,8 @@
 package org.example.handler;
 
 
+import org.example.dto.ResponseInfo;
+import org.example.exceptions.NotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,4 +26,10 @@ public class BooklandExceptionHandler {
         return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFound.class)
+    public ResponseEntity<ResponseInfo> handleNotFoundedResource(NotFound ex) {
+        ResponseInfo responseInfo = new ResponseInfo(null, false, ex.getMessage());
+        return new ResponseEntity<>(responseInfo, HttpStatus.BAD_REQUEST);
+    }
 }
