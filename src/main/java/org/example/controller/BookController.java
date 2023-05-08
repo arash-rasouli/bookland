@@ -49,7 +49,7 @@ public class BookController {
             return ResponseEntity.ok(responseInfo);
         }
         catch (Exception ex){
-            if (ex instanceof NotFound){throw ex;}
+            if (ex instanceof NotFound){throw (NotFound) ex;}
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
             logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
@@ -61,9 +61,9 @@ public class BookController {
     public ResponseEntity<ResponseInfo> addBook(@Valid @RequestBody Book book){
         ResponseInfo responseInfo;
         try{
-            bookService.addBook(book);
-            responseInfo = new ResponseInfo(book, true, "Book Added Successfully");
-            logger.info("Book with id {} added successfully", book.getId());
+            Book _book = bookService.addBook(book);
+            responseInfo = new ResponseInfo(_book, true, "Book Added Successfully");
+            logger.info("Book with id {} added successfully", _book.getId());
             return new ResponseEntity<>(responseInfo, HttpStatus.CREATED);
         }
         catch (Exception ex){
@@ -79,11 +79,11 @@ public class BookController {
         try {
             Book _book = bookService.updateBook(id, book);
             responseInfo = new ResponseInfo(_book, true, "Book Updated Successfully");
-            logger.info("Book with id {} updated successfully", id);
+            logger.info("Book with id {} updated successfully", _book.getId());
             return ResponseEntity.ok(responseInfo);
         }
         catch (Exception ex){
-            if (ex instanceof NotFound){throw ex;}
+            if (ex instanceof NotFound){throw (NotFound) ex;}
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
             logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
@@ -101,7 +101,7 @@ public class BookController {
             return ResponseEntity.ok(responseInfo);
         }
         catch (Exception ex){
-            if (ex instanceof NotFound){throw ex;}
+            if (ex instanceof NotFound){throw (NotFound) ex;}
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
             logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());

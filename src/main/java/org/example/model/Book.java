@@ -30,11 +30,14 @@ public class Book {
     public void update(Book _book){
         name = _book.getName();
         authorName = _book.getAuthorName();
-//        publishedDate = _book.getPublishedDate();
+        publishedDate = _book.getPublishedDate();
     }
 
     public int getId() {
         return id;
+    }
+    public void setId(int id) {
+        this.id=id;
     }
 
     public String getName() {
