@@ -3,10 +3,12 @@ package org.example.model;
 import jakarta.persistence.*;
 
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.example.utils.Util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "USER_")
@@ -15,7 +17,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @NotBlank(message = "userEmail can not be blank")
+    @Email(message = "Wrong email format")
     private String email;
+    @Size(min = 4, message = "Password should contain at least 4 character")
     private String password;
 
     @ManyToMany

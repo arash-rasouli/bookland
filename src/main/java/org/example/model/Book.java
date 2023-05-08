@@ -1,8 +1,11 @@
 package org.example.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -11,9 +14,13 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @NotBlank(message = "name can't be blank")
     private String name;
+    @NotBlank(message = "authorName can't be blank")
     private String authorName;
-    private Date publishedDate;
+    @NotNull(message = "publishedDate can't be null")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate publishedDate;
 
     @ManyToMany(mappedBy = "library")
     List<User> users;
@@ -32,10 +39,10 @@ public class Book {
         this.authorName = authorName;
     }
 
-    public Date getPublishedDate() {
+    public LocalDate getPublishedDate() {
         return publishedDate;
     }
-    public void setPublishedDate(Date publishedDate) {
+    public void setPublishedDate(LocalDate publishedDate) {
         this.publishedDate = publishedDate;
     }
 }
