@@ -38,13 +38,13 @@ class BookServiceTest {
     }
 
     @Test
-    void testGetAllBooksEmpty() {
+    void testGetAllBooksEmpty() throws Exception{
         when(repo.findAll()).thenReturn(books);
         assertArrayEquals(books.toArray(), service.getAllBooks().toArray());
     }
 
     @Test
-    void testGetAllBooksHas2Element() {
+    void testGetAllBooksHas2Element() throws Exception{
         books.add(book1);
         books.add(book2);
         when(repo.findAll()).thenReturn(books);
@@ -52,14 +52,14 @@ class BookServiceTest {
     }
 
     @Test
-    void testAddBook() {
+    void testAddBook() throws Exception{
         when(repo.save(book1)).thenReturn(any());
         service.addBook(book1);
         verify(repo).save(book1);
     }
 
     @Test
-    void testGetBookNotFound() throws NotFound {
+    void testGetBookNotFound() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.empty());
         assertThrows(NotFound.class,() -> {
             service.getBook(11);
@@ -67,13 +67,13 @@ class BookServiceTest {
     }
 
     @Test
-    void testGetBookFound() throws NotFound {
+    void testGetBookFound() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.of(book1));
         assertEquals(book1, service.getBook(11), "Should return the book object");
     }
 
     @Test
-    void testUpdateBookNotFound() throws NotFound {
+    void testUpdateBookNotFound() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.empty());
         assertThrows(NotFound.class,() -> {
             service.updateBook(11, book1);
@@ -81,13 +81,13 @@ class BookServiceTest {
     }
 
     @Test
-    void testUpdateBookReturnNewBook() throws NotFound {
+    void testUpdateBookReturnNewBook() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.of(book1));
         assertEquals(book2, service.updateBook(11, book2), "Should update and return the new book object");
     }
 
     @Test
-    void testUpdateBookVerifyFunctionShouldBeCalled() throws NotFound {
+    void testUpdateBookVerifyFunctionShouldBeCalled() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.of(book1));
         service.updateBook(11,book2);
         verify(book1, description("Update method of book should be called")).update(book2);
@@ -95,7 +95,7 @@ class BookServiceTest {
     }
 
     @Test
-    void testDeleteBookNotFound() throws NotFound {
+    void testDeleteBookNotFound() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.empty());
         assertThrows(NotFound.class,() -> {
             service.deleteBook(11);
@@ -103,7 +103,7 @@ class BookServiceTest {
     }
 
     @Test
-    void testDeleteBookVerifyFunctionShouldBeCalled() throws NotFound {
+    void testDeleteBookVerifyFunctionShouldBeCalled() throws Exception {
         when(repo.existsById(11)).thenReturn(true);
         service.deleteBook(11);
         verify(repo, description("deleteById method of Repository should be called")).deleteById(11);
