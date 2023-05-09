@@ -59,9 +59,6 @@ public class User {
         return this.password.equals(passHash);
     }
 
-    public List<Book> getLibrary() {
-        return library;
-    }
 
     public String getEmail() {
         return email;
@@ -73,4 +70,9 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Book> getLibrary() {
+        return library;
+    }
+    public void setLibrary(List<Book> library){this.library = library;}
 }
