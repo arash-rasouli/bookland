@@ -65,7 +65,7 @@ public class UserService {
         userRepo.save(foundedUser);
     }
 
-    public void deleteBookInLibrary(String userEmail, int bookId) throws Exception{
+    public void deleteBookFromLibrary(String userEmail, int bookId) throws Exception{
         User foundedUser = userRepo.findByEmail(userEmail);
         if (foundedUser == null) {
             logger.error("[UserService - getAllBookInLibrary] Authenticated user not found in database");

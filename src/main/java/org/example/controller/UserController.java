@@ -1,55 +1,98 @@
 package org.example.controller;
 
-import org.example.BooklandApp;
-import org.example.dao.UserRepository;
 import org.example.dto.ResponseInfo;
-import org.example.model.User;
-import org.example.system.BooklandSystem;
+import org.example.exceptions.AlreadyExist;
+import org.example.exceptions.NotFound;
+import org.example.model.Book;
+import org.example.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.AbstractMap.*;
+import java.util.List;
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user")
 public class UserController {
 
-//    @Autowired
-    BooklandSystem system;
+    @Autowired
+    UserService userService;
 
-    public UserController(BooklandSystem system) {
-        this.system = system;
-    }
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public void setSystem(BooklandSystem system) {
-        this.system = system;
-    }
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-
-    @PostMapping("/login")
-    @ResponseBody
-    public Object login(@RequestParam(value = "userEmail") String userEmail,
-                        @RequestParam(value = "password") String password){
+    @GetMapping("/library")
+    public ResponseEntity<ResponseInfo> getAllBookInLibrary(@RequestAttribute(value = "userEmail") String userEmail){
+        ResponseInfo responseInfo;
         try {
-            SimpleEntry<String, Object> jwt = system.login(userEmail, password);
-            ResponseInfo responseInfo = new ResponseInfo(jwt, true, "Login Successfully");
-            return new ResponseEntity<>(responseInfo, HttpStatus.OK);
-        }catch (Exception e){
-            logger.info("Falied login by username = {}",userEmail);
-            ResponseInfo responseInfo = new ResponseInfo(null, false, "Login Failed");
-            responseInfo.addError(e.getMessage());
-            return new ResponseEntity<>(responseInfo, HttpStatus.UNAUTHORIZED);
+            List<Book> books = userService.getAllBookInLibrary(userEmail);
+            responseInfo = new ResponseInfo(books, true, "");
+            return ResponseEntity.ok(responseInfo);
+        }
+        catch (Exception ex){
+
+            responseInfo = new ResponseInfo(null, false, "Internal Server Error");
+            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/library/{id}")
+    public ResponseEntity<ResponseInfo> getBookInLibrary(@RequestAttribute(value = "userEmail") String userEmail,
+                                                         @PathVariable int id) throws NotFound{
+        ResponseInfo responseInfo;
+        try {
+            Book book = userService.getBookInLibrary(userEmail, id);
+            responseInfo = new ResponseInfo(book, true, "");
+            return ResponseEntity.ok(responseInfo);
+        }
+        catch (Exception ex){
+            if (ex instanceof NotFound) throw (NotFound) ex;
+
+            responseInfo = new ResponseInfo(null, false, "Internal Server Error");
+            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/library/{id}")
+    public ResponseEntity<ResponseInfo> addBookToLibrary(@RequestAttribute(value = "userEmail") String userEmail,
+                                                         @PathVariable int id) throws NotFound, AlreadyExist {
+        ResponseInfo responseInfo;
+        try {
+            userService.addBookToLibrary(userEmail, id);
+            responseInfo = new ResponseInfo(null, true, "Book Added To Library Successfully");
+            return ResponseEntity.ok(responseInfo);
+        }
+        catch (Exception ex){
+            if (ex instanceof NotFound) throw (NotFound) ex;
+            if (ex instanceof AlreadyExist) throw (AlreadyExist) ex;
+
+            responseInfo = new ResponseInfo(null, false, "Internal Server Error");
+            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/library/{id}")
+    public ResponseEntity<ResponseInfo> deleteBookFromLibrary(@RequestAttribute(value = "userEmail") String userEmail,
+                                                         @PathVariable int id) throws NotFound, AlreadyExist {
+        ResponseInfo responseInfo;
+        try {
+            userService.deleteBookFromLibrary(userEmail, id);
+            responseInfo = new ResponseInfo(null, true, "Book Deleted From Library Successfully");
+            return ResponseEntity.ok(responseInfo);
+        }
+        catch (Exception ex){
+            if (ex instanceof NotFound) throw (NotFound) ex;
+            if (ex instanceof AlreadyExist) throw (AlreadyExist) ex;
+
+            responseInfo = new ResponseInfo(null, false, "Internal Server Error");
+            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
