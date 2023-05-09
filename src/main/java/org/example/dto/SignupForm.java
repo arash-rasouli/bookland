@@ -3,8 +3,7 @@ package org.example.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.executable.ValidateOnExecution;
-import org.springframework.validation.annotation.Validated;
+import org.example.model.User;
 
 public class SignupForm {
     @NotBlank(message = "userEmail can not be blank")
@@ -16,6 +15,9 @@ public class SignupForm {
     @NotBlank(message = "Repeated password can not be blank")
     String repeatedPassword;
 
+    public User initializeUser(){
+        return new User(userEmail, password);
+    }
 
 
     public String getUserEmail() {
