@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class BookServiceTest {
+class BookServiceUnitTest {
 
     @Mock
     private BookRepository repo;
@@ -46,7 +46,7 @@ class BookServiceTest {
     @Test
     void testGetAllBooksEmpty() throws Exception{
         when(repo.findAll()).thenReturn(books);
-        assertArrayEquals(books.toArray(), service.getAllBooks().toArray());
+        assertEquals(0, service.getAllBooks().size(), "Should return empty array");
     }
 
     @Test
@@ -54,13 +54,13 @@ class BookServiceTest {
         books.add(book1);
         books.add(book2);
         when(repo.findAll()).thenReturn(books);
-        assertArrayEquals(books.toArray(), service.getAllBooks().toArray());
+        assertArrayEquals(books.toArray(), service.getAllBooks().toArray(), "Arrays should be equals");
     }
 
     @Test
     void testAddBook() throws Exception{
         service.addBook(bookForm1);
-        verify(repo).save(book1);
+        verify(repo, description("book save method should be called")).save(book1);
     }
 
     @Test
