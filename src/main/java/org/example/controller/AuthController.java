@@ -2,6 +2,7 @@ package org.example.controller;
 
 import jakarta.validation.Valid;
 
+import org.example.dto.LoginForm;
 import org.example.dto.ResponseInfo;
 import org.example.dto.SignupForm;
 import org.example.exceptions.AlreadyExist;
@@ -29,15 +30,15 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseInfo> login(@Valid @RequestBody User user) throws NotFound, NotMatch {
+    public ResponseEntity<ResponseInfo> login(@Valid @RequestBody LoginForm loginForm) throws NotFound, NotMatch {
         ResponseInfo responseInfo;
         try {
-            AbstractMap.SimpleEntry<String, String> jwt = authService.login(user);
+            AbstractMap.SimpleEntry<String, String> jwt = authService.login(loginForm);
             responseInfo = new ResponseInfo(jwt, true, "Login Successfully");
-            logger.info("Successful login by username = {}",user.getEmail());
+            logger.info("Successful login by username = {}",loginForm.getUserEmail());
             return new ResponseEntity<>(responseInfo, HttpStatus.OK);
         }catch (Exception ex){
-            logger.info("Failed login by username = {}",user.getEmail());
+            logger.info("Failed login by username = {}",loginForm.getUserEmail());
             if (ex instanceof NotFound){throw (NotFound) ex;}
             if (ex instanceof NotMatch) {throw (NotMatch) ex;}
 
