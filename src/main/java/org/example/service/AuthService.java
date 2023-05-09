@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.dao.UserRepository;
+import org.example.dto.LoginForm;
 import org.example.dto.SignupForm;
 import org.example.exceptions.AlreadyExist;
 import org.example.exceptions.NotFound;
@@ -10,7 +11,6 @@ import org.example.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -35,13 +35,13 @@ public class AuthService {
         }
     }
 
-    public SimpleEntry<String, String> login(User user) throws Exception{
-        User foundedUser = userRepo.findByEmail(user.getEmail());
+    public SimpleEntry<String, String> login(LoginForm loginForm) throws Exception{
+        User foundedUser = userRepo.findByEmail(loginForm.getUserEmail());
 
         if (foundedUser == null) {
             throw new NotFound("Unregistered User. Please signup first");
         }
-        if (!foundedUser.verifyPassword(user.getPassword())) {
+        if (!foundedUser.verifyPassword(loginForm.getPassword())) {
             throw new NotMatch("Invalid Credentials");
         }
 
