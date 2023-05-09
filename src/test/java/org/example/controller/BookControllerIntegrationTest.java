@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dto.ResponseInfo;
 import org.example.model.Book;
 import org.example.service.BookService;
+import org.example.utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,12 @@ class BookControllerIntegrationTest {
     private BookService bookService;
 
     Book book1, book2;
+
+    String JWT;
     List<Book> books;
 
     @BeforeEach
-    public void setup(){
+    public void setup() throws Exception{
         book1 = new Book();
         book1.setId(1);
         book1.setName("book1");
@@ -55,6 +58,8 @@ class BookControllerIntegrationTest {
         books= new ArrayList<>();
         books.add(book1);
         books.add(book2);
+
+        JWT = Util.createJWT("test@test.test", Util.getJWTKey());
     }
 
     @Test
@@ -64,7 +69,7 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(books, true);
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= get("/book");
+        RequestBuilder request= get("/book").header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isOk()).andExpect(content().string(equalTo(responseStr)));
     }
 
@@ -75,7 +80,7 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(null, false, "Internal Server Error");
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= get("/book");
+        RequestBuilder request= get("/book").header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isInternalServerError()).andExpect(content().string(equalTo(responseStr)));
     }
 
@@ -86,7 +91,7 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(book1, true);
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= get("/book/1");
+        RequestBuilder request= get("/book/1").header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isOk()).andExpect(content().string(equalTo(responseStr)));
 
     }
@@ -98,7 +103,7 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(null, false, "Internal Server Error");
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= get("/book/1");
+        RequestBuilder request= get("/book/1").header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isInternalServerError()).andExpect(content().string(equalTo(responseStr)));
     }
 
@@ -108,7 +113,8 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(book1, true, "Book Added Successfully");
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= post("/book").content(objectMapper.writeValueAsString(book1)).contentType("application/json");
+        RequestBuilder request= post("/book").content(objectMapper.writeValueAsString(book1)).contentType("application/json")
+                .header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isCreated()).andExpect(content().string(equalTo(responseStr)));
     }
 
@@ -119,7 +125,8 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(null, false, "Internal Server Error");
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= post("/book").content(objectMapper.writeValueAsString(book1)).contentType("application/json");
+        RequestBuilder request= post("/book").content(objectMapper.writeValueAsString(book1)).contentType("application/json")
+                .header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isInternalServerError()).andExpect(content().string(equalTo(responseStr)));
     }
 
@@ -130,7 +137,8 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(book1, true, "Book Updated Successfully");
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= put("/book/1").content(objectMapper.writeValueAsString(book1)).contentType("application/json");
+        RequestBuilder request= put("/book/1").content(objectMapper.writeValueAsString(book1)).contentType("application/json")
+                .header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isOk()).andExpect(content().string(equalTo(responseStr)));
     }
 
@@ -141,7 +149,8 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(null, false, "Internal Server Error");
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= put("/book/1").content(objectMapper.writeValueAsString(book1)).contentType("application/json");
+        RequestBuilder request= put("/book/1").content(objectMapper.writeValueAsString(book1)).contentType("application/json")
+                .header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isInternalServerError()).andExpect(content().string(equalTo(responseStr)));
     }
 
@@ -150,7 +159,7 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(null, true, "Book Deleted Successfully");
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= delete("/book/1");
+        RequestBuilder request= delete("/book/1").header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isOk()).andExpect(content().string(equalTo(responseStr)));
 
     }
@@ -162,7 +171,7 @@ class BookControllerIntegrationTest {
         ResponseInfo responseInfo = new ResponseInfo(null, false, "Internal Server Error");
         String responseStr = objectMapper.writeValueAsString(responseInfo);
 
-        RequestBuilder request= delete("/book/1");
+        RequestBuilder request= delete("/book/1").header("auth-token", JWT);
         mvc.perform(request).andExpect(status().isInternalServerError()).andExpect(content().string(equalTo(responseStr)));
     }
 }
