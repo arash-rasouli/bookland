@@ -16,6 +16,9 @@ public class AuthenticationFilterConfig {
         registrationBean.addUrlPatterns("/book");
         registrationBean.addUrlPatterns("/book/*");
 
+        registrationBean.addUrlPatterns("/user");
+        registrationBean.addUrlPatterns("/user/*");
+
         return registrationBean;
     }
 }
