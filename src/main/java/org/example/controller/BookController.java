@@ -2,6 +2,7 @@ package org.example.controller;
 
 import jakarta.validation.Valid;
 
+import org.example.dto.BookForm;
 import org.example.dto.ResponseInfo;
 import org.example.exceptions.NotFound;
 import org.example.model.Book;
@@ -58,10 +59,10 @@ public class BookController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ResponseInfo> addBook(@Valid @RequestBody Book book){
+    public ResponseEntity<ResponseInfo> addBook(@Valid @RequestBody BookForm bookForm){
         ResponseInfo responseInfo;
         try{
-            Book _book = bookService.addBook(book);
+            Book _book = bookService.addBook(bookForm);
             responseInfo = new ResponseInfo(_book, true, "Book Added Successfully");
             logger.info("Book with id {} added successfully", _book.getId());
             return new ResponseEntity<>(responseInfo, HttpStatus.CREATED);
@@ -74,10 +75,10 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseInfo> updateBook(@PathVariable int id, @Valid @RequestBody Book book) throws NotFound{
+    public ResponseEntity<ResponseInfo> updateBook(@PathVariable int id, @Valid @RequestBody BookForm bookForm) throws NotFound{
         ResponseInfo responseInfo;
         try {
-            Book _book = bookService.updateBook(id, book);
+            Book _book = bookService.updateBook(id, bookForm);
             responseInfo = new ResponseInfo(_book, true, "Book Updated Successfully");
             logger.info("Book with id {} updated successfully", _book.getId());
             return ResponseEntity.ok(responseInfo);

@@ -1,20 +1,10 @@
-package org.example.model;
+package org.example.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import org.example.model.Book;
 
-//import java.time.LocalDate;
-import java.time.LocalDate;
-import java.util.List;
-
-@Entity
-public class Book {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+public class BookForm {
 
     @NotBlank(message = "name can't be blank")
     private String name;
@@ -24,33 +14,14 @@ public class Book {
     @Pattern(regexp = "^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$", message = "Invalid Date Format(format = yyyy-mm-dd)")
     private String publishedDate;
 
-    @ManyToMany(mappedBy = "library")
-    List<User> users;
-
-    public Book(){}
-
-    public Book(String name, String authorName, String publishedDate) {
-        this.name = name;
-        this.authorName = authorName;
-        this.publishedDate = publishedDate;
-    }
-
-    public void update(Book _book){
-        name = _book.getName();
-        authorName = _book.getAuthorName();
-        publishedDate = _book.getPublishedDate();
-    }
-
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id=id;
+    public Book initializeBook(){
+        return new Book(name, authorName, publishedDate);
     }
 
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -58,6 +29,7 @@ public class Book {
     public String getAuthorName() {
         return authorName;
     }
+
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
     }
@@ -65,6 +37,7 @@ public class Book {
     public String getPublishedDate() {
         return publishedDate;
     }
+
     public void setPublishedDate(String publishedDate) {
         this.publishedDate = publishedDate;
     }

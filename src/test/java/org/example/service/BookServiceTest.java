@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.dao.BookRepository;
+import org.example.dto.BookForm;
 import org.example.exceptions.NotFound;
 import org.example.model.Book;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,9 @@ class BookServiceTest {
     @Mock
     private Book book1, book2;
 
+    @Mock
+    private BookForm bookForm1, bookForm2;
+
     private ArrayList<Book> books;
 
     @InjectMocks
@@ -34,6 +38,8 @@ class BookServiceTest {
 
     @BeforeEach
     public void setup(){
+        when(bookForm1.initializeBook()).thenReturn(book1);
+        when(bookForm2.initializeBook()).thenReturn(book2);
         books = new ArrayList<>();
     }
 
@@ -53,8 +59,7 @@ class BookServiceTest {
 
     @Test
     void testAddBook() throws Exception{
-        when(repo.save(book1)).thenReturn(any());
-        service.addBook(book1);
+        service.addBook(bookForm1);
         verify(repo).save(book1);
     }
 
@@ -76,20 +81,20 @@ class BookServiceTest {
     void testUpdateBookNotFound() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.empty());
         assertThrows(NotFound.class,() -> {
-            service.updateBook(11, book1);
+            service.updateBook(11, bookForm1);
         }, "Should return Not Found Exception");
     }
 
     @Test
     void testUpdateBookReturnNewBook() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.of(book1));
-        assertEquals(book2, service.updateBook(11, book2), "Should update and return the new book object");
+        assertEquals(book2, service.updateBook(11, bookForm2), "Should update and return the new book object");
     }
 
     @Test
     void testUpdateBookVerifyFunctionShouldBeCalled() throws Exception {
         when(repo.findById(11)).thenReturn(Optional.of(book1));
-        service.updateBook(11,book2);
+        service.updateBook(11,bookForm2);
         verify(book1, description("Update method of book should be called")).update(book2);
         verify(repo, description("save method of Repository should be called")).save(book1);
     }

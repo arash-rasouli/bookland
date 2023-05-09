@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.dao.BookRepository;
+import org.example.dto.BookForm;
 import org.example.exceptions.NotFound;
 import org.example.model.Book;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ public class BookService {
         return bookRepo.findAll();
     }
 
-    public Book addBook(Book book) throws Exception{
+    public Book addBook(BookForm bookForm) throws Exception{
+        Book book = bookForm.initializeBook();
         bookRepo.save(book);
         return book;
     }
@@ -34,7 +36,8 @@ public class BookService {
         }
     }
 
-    public Book updateBook(int id, Book _book) throws Exception{
+    public Book updateBook(int id, BookForm bookForm) throws Exception{
+        Book _book = bookForm.initializeBook();
         Optional<Book> book = bookRepo.findById(id);
         if(book.isPresent()){
             book.get().update(_book);
