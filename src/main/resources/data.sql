@@ -1,1 +1,15 @@
-INSERT INTO user_ VALUES('1','arash3908@gmail.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4')
+-- all passwords is 1234
+INSERT INTO user_ VALUES('1001', 'user1@gmail.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4')
+INSERT INTO user_ VALUES('1002', 'user2@gmail.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4')
+INSERT INTO user_ VALUES('1003', 'user3@gmail.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4')
+
+
+INSERT INTO book VALUES('1001', 'author1', 'book1', '2020-01-01')
+INSERT INTO book VALUES('1002', 'author2', 'book2', '2020-01-02')
+INSERT INTO book VALUES('1003', 'author3', 'book3', '2020-01-03')
+INSERT INTO book VALUES('1004', 'author4', 'book4', '2020-01-04')
+
+INSERT INTO user_book VALUES('1001', '1001')
+INSERT INTO user_book VALUES('1001', '1002')
+INSERT INTO user_book VALUES('1001', '1003')
+
