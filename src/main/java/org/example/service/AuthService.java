@@ -45,24 +45,25 @@ public class AuthService {
             throw new NotMatch("Invalid Credentials");
         }
 
-        return new SimpleEntry<>("jwt", Util.createJWT(foundedUser.getEmail(), JWTKey));
+        return new SimpleEntry<>("jwt", Util.createJWT(loginForm.getUserEmail(), JWTKey));
     }
 
-    public SimpleEntry<String, String> signup(SignupForm form) throws Exception{
-        User foundedUser = userRepo.findByEmail(form.getUserEmail());
+    public SimpleEntry<String, String> signup(SignupForm signupForm) throws Exception{
+        User foundedUser = userRepo.findByEmail(signupForm.getUserEmail());
         if (foundedUser != null) {
             throw new AlreadyExist("This userEmail is already used. Please try another userEmail");
         }
-        if(!form.getPassword().equals(form.getRepeatedPassword())){
+        if(!signupForm.getPassword().equals(signupForm.getRepeatedPassword())){
             throw new NotMatch("Password doesn't match with repeated password");
         }
 
-        String hashPassword = Util.hexToString(Util.getSHA(form.getPassword()));
+        User newUser = signupForm.initializeUser();
+        String hashPassword = Util.hexToString(Util.getSHA(signupForm.getPassword()));
+        newUser.setPassword(hashPassword);
 
-        User newUser = new User(form.getUserEmail(), hashPassword);
         userRepo.save(newUser);
 
-        return new SimpleEntry<>("jwt", Util.createJWT(form.getUserEmail(), JWTKey));
+        return new SimpleEntry<>("jwt", Util.createJWT(signupForm.getUserEmail(), JWTKey));
 
     }
 }
