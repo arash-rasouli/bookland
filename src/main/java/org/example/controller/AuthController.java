@@ -43,7 +43,7 @@ public class AuthController {
             if (ex instanceof NotMatch) {throw (NotMatch) ex;}
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
-            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            logger.error("[AuthController-login] Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
             return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -62,7 +62,7 @@ public class AuthController {
             if (ex instanceof NotMatch) {throw (NotMatch) ex;}
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
-            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            logger.error("[AuthController-signup] Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
             return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -35,7 +35,7 @@ public class UserController {
         catch (Exception ex){
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
-            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            logger.error("[UserController-getAllBookInLibrary] Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
             return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -53,7 +53,7 @@ public class UserController {
             if (ex instanceof NotFound) throw (NotFound) ex;
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
-            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            logger.error("[UserController-getBookInLibrary] Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
             return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -65,6 +65,7 @@ public class UserController {
         try {
             userService.addBookToLibrary(userEmail, id);
             responseInfo = new ResponseInfo(null, true, "Book Added To Library Successfully");
+            logger.info("Book with id {} added to user {} library successfully", id, userEmail);
             return ResponseEntity.ok(responseInfo);
         }
         catch (Exception ex){
@@ -72,7 +73,7 @@ public class UserController {
             if (ex instanceof AlreadyExist) throw (AlreadyExist) ex;
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
-            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            logger.error("[UserController-addBookToLibrary] Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
             return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -84,6 +85,7 @@ public class UserController {
         try {
             userService.deleteBookFromLibrary(userEmail, id);
             responseInfo = new ResponseInfo(null, true, "Book Deleted From Library Successfully");
+            logger.info("Book with id {} deleted from user {} library successfully", id, userEmail);
             return ResponseEntity.ok(responseInfo);
         }
         catch (Exception ex){
@@ -91,7 +93,7 @@ public class UserController {
             if (ex instanceof AlreadyExist) throw (AlreadyExist) ex;
 
             responseInfo = new ResponseInfo(null, false, "Internal Server Error");
-            logger.error("Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
+            logger.error("[UserController-deleteBookFromLibrary] Unhandled Exception: error message : {} , error stack : {}", ex.getMessage(), ex.getStackTrace());
             return new ResponseEntity<>(responseInfo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
