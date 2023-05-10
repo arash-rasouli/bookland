@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 public class AuthenticationFilterConfig {
 
     @Bean
-    public FilterRegistrationBean<AuthenticationFilter> registrationBean(){
+    public FilterRegistrationBean<AuthenticationFilter> registrationBean(AuthenticationFilter authenticationFilter){
         FilterRegistrationBean<AuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
 
-        registrationBean.setFilter(new AuthenticationFilter());
+        registrationBean.setFilter(authenticationFilter);
         registrationBean.addUrlPatterns("/book");
         registrationBean.addUrlPatterns("/book/*");
 
